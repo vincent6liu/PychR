@@ -8,7 +8,7 @@ if sys.version_info.minor < 9:
     warn("Analysis methods were developed using Python 3.9")
 
 # get version
-with open("src/version.py") as f:
+with open("src/pychr/version.py") as f:
     exec(f.read())
 
 setup(
