@@ -120,9 +120,8 @@ def load_qc_info_from_arrow(arrow_file_dir):
     if arrow_file_dir[-1] != '/':
         arrow_file_dir += '/'
     arrow_files = sorted(glob.glob(arrow_file_dir+'*.arrow'))
-    # construct chr list in counting order, since it's alphanumeric by default
-    meta_dict, cell_barcode_list = {}, []
     
+    meta_df_list, cell_barcode_list = [], []
     for arrow_file_path in arrow_files:
         short_id = arrow_file_path.split('/')[-1].replace('.arrow', '')
         arrow_file = h5py.File(arrow_file_path, 'r')
@@ -139,7 +138,8 @@ def load_qc_info_from_arrow(arrow_file_dir):
         meta_df.index = cell_barcodes
         meta_df.columns = ['DoubletEnrichment', 'DoubletScore', 'TSSEnrichment', 'nFrags']
         
-        meta_dict[short_id] = meta_df
+        meta_df_list.append(meta_df)
     
-    return meta_dict
-
+    meta_df = pd.concat(meta_df_list, axis=0)
+    
+    return meta_df
