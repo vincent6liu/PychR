@@ -13,6 +13,8 @@ def load_gs_mat_from_arrow(arrow_file_dir):
     if arrow_file_dir[-1] != '/':
         arrow_file_dir += '/'
     arrow_files = sorted(glob.glob(arrow_file_dir+'*.arrow'))
+    arrow_files = [x for x in arrow_files if 'GeneScoreMatrix' in h5py.File(x, 'r').keys()]
+    
     # construct chr list in counting order, since it's alphanumeric by default
     chr_keys = ['chr'+str(i) for i in range(1, 23)] + ['chrX']
     combined_mat_list, cell_barcode_list = [], []
@@ -73,8 +75,9 @@ def load_motif_mat_from_arrow(arrow_file_dir):
     if arrow_file_dir[-1] != '/':
         arrow_file_dir += '/'
     arrow_files = sorted(glob.glob(arrow_file_dir+'*.arrow'))
-    deviation_mat_list, z_mat_list, cell_barcode_list = [], [], []
+    arrow_files = [x for x in arrow_files if 'MotifMatrix' in h5py.File(x, 'r').keys()]
     
+    deviation_mat_list, z_mat_list, cell_barcode_list = [], [], []
     for arrow_file_path in arrow_files:
         short_id = arrow_file_path.split('/')[-1].replace('.arrow', '')
         arrow_file = h5py.File(arrow_file_path, 'r')
